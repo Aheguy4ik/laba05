@@ -45,3 +45,7 @@ jobs:
         path-to-lcov: _build/coverage.info
     - name: Init submodules
       run: git submodule update --init --recursive
+    - name: Capture coverage info
+      run: |
+        cd _build
+        geninfo . --output-filename coverage.info --memory 0 --rc geninfo_unexecuted_blocks=1 --rc geninfo_ignore_errors=mismatch
