@@ -42,8 +42,10 @@ jobs:
     - name: Capture coverage info
       run: |
         cd _build
-        # используем geninfo с игнорированием ошибок mismatch
-        geninfo . --output-filename coverage.info --memory 0 --rc geninfo_unexecuted_blocks=1 --rc geninfo_ignore_errors=mismatch
+        geninfo . --output-filename coverage.info --memory 0 \
+          --rc geninfo_unexecuted_blocks=1 \
+          --rc geninfo_ignore_errors=mismatch \
+          --ignore-errors mismatch
         lcov --remove coverage.info '/usr/*' 'third-party/*' --output-file coverage.info
         lcov --list coverage.info
 
