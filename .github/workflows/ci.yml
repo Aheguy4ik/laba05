@@ -8,7 +8,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -42,11 +41,8 @@ jobs:
     - name: Capture coverage info
       run: |
         cd _build
-        geninfo . --output-filename coverage.info --memory 0 \
-          --rc geninfo_unexecuted_blocks=1 \
-          --rc geninfo_ignore_errors=mismatch \
-          --ignore-errors mismatch
-        lcov --remove coverage.info '/usr/*' 'third-party/*' --output-file coverage.info
+        lcov --capture --directory . --output-file coverage.info
+        lcov --remove coverage.info '/usr/*' 'third-party/*' --output-file coverage.info --ignore-errors unused
         lcov --list coverage.info
 
     - name: Upload coverage to Coveralls
