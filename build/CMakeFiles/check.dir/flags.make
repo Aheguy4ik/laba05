@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/aheguy/laba05/banking -isystem /home/aheguy/laba05/third-party/gtest/googlemock/include -isystem /home/aheguy/laba05/third-party/gtest/googlemock -isystem /home/aheguy/laba05/third-party/gtest/googletest/include -isystem /home/aheguy/laba05/third-party/gtest/googletest
+CXX_INCLUDES = -I/home/aheguy/laba05/banking -isystem /home/aheguy/laba05/build/_deps/googletest-src/googlemock/include -isystem /home/aheguy/laba05/build/_deps/googletest-src/googlemock -isystem /home/aheguy/laba05/build/_deps/googletest-src/googletest/include -isystem /home/aheguy/laba05/build/_deps/googletest-src/googletest
 
 CXX_FLAGS = -std=gnu++17 -g -O0 --coverage -fPIC
 

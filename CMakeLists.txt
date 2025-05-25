@@ -14,9 +14,16 @@ add_library(banking
 # Чтобы компилятор видел хедеры banking/ с простым #include "Account.h"
 target_include_directories(banking PUBLIC banking)
 
+include(FetchContent)
+
 if(BUILD_TESTS)
     enable_testing()
-    add_subdirectory(third-party/gtest)
+
+    FetchContent_Declare(
+      googletest
+      URL https://github.com/google/googletest/archive/refs/tags/release-1.12.1.zip
+    )
+    FetchContent_MakeAvailable(googletest)
 
     add_executable(check tests/tests.cpp)
 

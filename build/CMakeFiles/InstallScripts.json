@@ -2,9 +2,9 @@
 	"InstallScripts" : 
 	[
 		"/home/aheguy/laba05/build/cmake_install.cmake",
-		"/home/aheguy/laba05/build/third-party/gtest/cmake_install.cmake",
-		"/home/aheguy/laba05/build/third-party/gtest/googlemock/cmake_install.cmake",
-		"/home/aheguy/laba05/build/third-party/gtest/googletest/cmake_install.cmake"
+		"/home/aheguy/laba05/build/_deps/googletest-build/cmake_install.cmake",
+		"/home/aheguy/laba05/build/_deps/googletest-build/googlemock/cmake_install.cmake",
+		"/home/aheguy/laba05/build/_deps/googletest-build/googletest/cmake_install.cmake"
 	],
 	"Parallel" : false
 }
