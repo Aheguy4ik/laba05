@@ -29,11 +29,13 @@ if(BUILD_TESTS)
 
     target_link_libraries(check PRIVATE banking gmock gmock_main gtest gtest_main pthread)
 
-    target_compile_options(banking PRIVATE -g -O0 --coverage -fPIC)
+    # Добавляем запрет инлайна и оптимизаций, чтобы gcov не ругался
+    target_compile_options(banking PRIVATE -g -O0 -fno-inline -fno-inline-functions --coverage -fPIC)
     target_link_options(banking PRIVATE --coverage --no-pie)
 
-    target_compile_options(check PRIVATE -g -O0 --coverage -fPIC)
+    target_compile_options(check PRIVATE -g -O0 -fno-inline -fno-inline-functions --coverage -fPIC)
     target_link_options(check PRIVATE --coverage --no-pie)
 
     add_test(NAME check COMMAND check)
 endif()
+
