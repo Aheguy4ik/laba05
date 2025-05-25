@@ -1,0 +1,32 @@
+cmake_minimum_required(VERSION 3.10)
+
+project(banking_project)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Библиотека banking из файлов в banking/
+add_library(banking
+    banking/Account.cpp
+    banking/Transaction.cpp
+)
+
+# Чтобы компилятор видел хедеры banking/ с простым #include "Account.h"
+target_include_directories(banking PUBLIC banking)
+
+if(BUILD_TESTS)
+    enable_testing()
+    add_subdirectory(third-party/gtest)
+
+    add_executable(check tests/tests.cpp)
+
+    target_link_libraries(check PRIVATE banking gmock gmock_main gtest gtest_main pthread)
+
+    target_compile_options(banking PRIVATE -g -O0 --coverage -fPIC)
+    target_link_options(banking PRIVATE --coverage --no-pie)
+
+    target_compile_options(check PRIVATE -g -O0 --coverage -fPIC)
+    target_link_options(check PRIVATE --coverage --no-pie)
+
+    add_test(NAME check COMMAND check)
+endif()
