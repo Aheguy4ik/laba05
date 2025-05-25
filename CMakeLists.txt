@@ -5,13 +5,11 @@ project(banking_project)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Библиотека banking из файлов в banking/
 add_library(banking
     banking/Account.cpp
     banking/Transaction.cpp
 )
 
-# Чтобы компилятор видел хедеры banking/ с простым #include "Account.h"
 target_include_directories(banking PUBLIC banking)
 
 include(FetchContent)
@@ -29,13 +27,12 @@ if(BUILD_TESTS)
 
     target_link_libraries(check PRIVATE banking gmock gmock_main gtest gtest_main pthread)
 
-    # Добавляем запрет инлайна и оптимизаций, чтобы gcov не ругался
-    target_compile_options(banking PRIVATE -g -O0 -fno-inline -fno-inline-functions --coverage -fPIC)
+    # Отключаем оптимизации и инлайн, включаем gcov с правильными флагами
+    target_compile_options(banking PRIVATE -g -O0 --coverage -fno-inline -fno-inline-functions -fno-inline-small-functions -fno-default-inline -fPIC)
     target_link_options(banking PRIVATE --coverage --no-pie)
 
-    target_compile_options(check PRIVATE -g -O0 -fno-inline -fno-inline-functions --coverage -fPIC)
+    target_compile_options(check PRIVATE -g -O0 --coverage -fno-inline -fno-inline-functions -fno-inline-small-functions -fno-default-inline -fPIC)
     target_link_options(check PRIVATE --coverage --no-pie)
 
     add_test(NAME check COMMAND check)
 endif()
-

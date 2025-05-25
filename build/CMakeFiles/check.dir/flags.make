@@ -6,5 +6,5 @@ CXX_DEFINES =
 
 CXX_INCLUDES = -I/home/aheguy/laba05/banking -isystem /home/aheguy/laba05/build/_deps/googletest-src/googlemock/include -isystem /home/aheguy/laba05/build/_deps/googletest-src/googlemock -isystem /home/aheguy/laba05/build/_deps/googletest-src/googletest/include -isystem /home/aheguy/laba05/build/_deps/googletest-src/googletest
 
-CXX_FLAGS = -std=gnu++17 -g -O0 -fno-inline -fno-inline-functions --coverage -fPIC
+CXX_FLAGS = -std=gnu++17 -g -O0 --coverage -fno-inline -fno-inline-functions -fno-inline-small-functions -fno-default-inline -fPIC
 

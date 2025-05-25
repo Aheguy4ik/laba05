@@ -41,7 +41,9 @@ jobs:
     - name: Capture coverage info
       run: |
         cd _build
-        lcov --capture --directory . --output-file coverage.info
+        geninfo . --output-filename coverage.info --memory 0 \
+          --rc geninfo_unexecuted_blocks=1 \
+          --rc geninfo_ignore_errors=mismatch,unmatched_function,unmatched_branches
         lcov --remove coverage.info '/usr/*' 'third-party/*' --output-file coverage.info --ignore-errors unused
         lcov --list coverage.info
 
