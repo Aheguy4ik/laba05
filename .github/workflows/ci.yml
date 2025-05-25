@@ -1,3 +1,4 @@
+  GNU nano 8.4                                                                                                                                                                                                                       .github/workflows/ci.yml                                                                                                                                                                                                                                
 name: CMake Build and Test with Coverage
 
 on:
@@ -51,3 +52,4 @@ jobs:
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         path-to-lcov: _build/coverage.info
+

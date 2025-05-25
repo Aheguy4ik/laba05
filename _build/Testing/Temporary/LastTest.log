@@ -1,10 +1,10 @@
-Start testing: May 25 17:09 MSK
+Start testing: May 25 17:14 MSK
 ----------------------------------------------------------
 1/1 Testing: check
 1/1 Test: check
 Command: "/home/aheguy/laba05/_build/check"
 Directory: /home/aheguy/laba05/_build
-"check" start time: May 25 17:09 MSK
+"check" start time: May 25 17:14 MSK
 Output:
 ----------------------------------------------------------
 Running main() from gmock_main.cc
@@ -36,8 +36,8 @@ Balance 1 is 2233
 Test time =   0.00 sec
 ----------------------------------------------------------
 Test Passed.
-"check" end time: May 25 17:09 MSK
+"check" end time: May 25 17:14 MSK
 "check" time elapsed: 00:00:00
 ----------------------------------------------------------
 
-End testing: May 25 17:09 MSK
+End testing: May 25 17:14 MSK
