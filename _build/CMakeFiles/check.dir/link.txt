@@ -1,0 +1,1 @@
+/usr/bin/c++ --coverage --no-pie -Wl,--dependency-file=CMakeFiles/check.dir/link.d CMakeFiles/check.dir/tests/tests.cpp.o -o check  libbanking.a lib/libgmock.a lib/libgmock_main.a lib/libgtest.a lib/libgtest_main.a -lpthread lib/libgmock.a lib/libgtest.a

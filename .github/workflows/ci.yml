@@ -2,9 +2,9 @@ name: CMake Build and Test with Coverage
 
 on:
   push:
-    branches: [ master, main ]
+    branches: [master, main]
   pull_request:
-    branches: [ master, main ]
+    branches: [master, main]
 
 jobs:
   build:
@@ -22,10 +22,8 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y lcov
 
-    - name: Check compiler and gcov versions
-      run: |
-        gcc --version
-        gcov --version
+    - name: Clean coverage files
+      run: rm -rf _build
 
     - name: Configure CMake
       run: cmake -S . -B _build -DBUILD_TESTS=ON
@@ -41,10 +39,8 @@ jobs:
     - name: Capture coverage info
       run: |
         cd _build
-        geninfo . --output-filename coverage.info --memory 0 \
-          --rc geninfo_unexecuted_blocks=1 \
-          --rc geninfo_ignore_errors=mismatch,unmatched_function,unmatched_branches
-        lcov --remove coverage.info '/usr/*' 'third-party/*' --output-file coverage.info --ignore-errors unused
+        lcov --capture --directory . --output-file coverage.info
+        lcov --remove coverage.info '/usr/*' 'third-party/*' --output-file coverage.info --ignore-errors=unused
         lcov --list coverage.info
 
     - name: Upload coverage to Coveralls

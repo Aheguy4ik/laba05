@@ -1,0 +1,43 @@
+Start testing: May 25 16:49 MSK
+----------------------------------------------------------
+1/1 Testing: check
+1/1 Test: check
+Command: "/home/aheguy/laba05/_build/check"
+Directory: /home/aheguy/laba05/_build
+"check" start time: May 25 16:49 MSK
+Output:
+----------------------------------------------------------
+Running main() from gmock_main.cc
+[==========] Running 5 tests from 2 test suites.
+[----------] Global test environment set-up.
+[----------] 3 tests from Account
+[ RUN      ] Account.Locker
+[       OK ] Account.Locker (0 ms)
+[ RUN      ] Account.BalancePositive
+[       OK ] Account.BalancePositive (0 ms)
+[ RUN      ] Account.BalanceNegative
+[       OK ] Account.BalanceNegative (0 ms)
+[----------] 3 tests from Account (0 ms total)
+
+[----------] 2 tests from Transaction
+[ RUN      ] Transaction.ConstructAndPositive
+0 send to 1 $100
+Balance 0 is 6000
+Balance 1 is 2233
+[       OK ] Transaction.ConstructAndPositive (0 ms)
+[ RUN      ] Transaction.Negative
+[       OK ] Transaction.Negative (0 ms)
+[----------] 2 tests from Transaction (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 5 tests from 2 test suites ran. (0 ms total)
+[  PASSED  ] 5 tests.
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"check" end time: May 25 16:49 MSK
+"check" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: May 25 16:49 MSK
