@@ -43,3 +43,5 @@ jobs:
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         path-to-lcov: _build/coverage.info
+    - name: Init submodules
+      run: git submodule update --init --recursive
