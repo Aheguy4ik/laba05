@@ -41,14 +41,14 @@ jobs:
     - name: Capture coverage info
       run: |
         cd _build
-        # Захватываем покрытие, игнорируем предупреждения inconsistent
-        lcov --capture --directory . --output-file coverage.info --ignore-errors inconsistent,unused
-        lcov --remove coverage.info '/usr/*' --output-file coverage.info --ignore-errors unused
-        lcov --list coverage.info
+        # Собираем покрытие, игнорируем предупреждения inconsistent, unused, mismatch
+        geninfo . --output-filename coverage.info --ignore-errors inconsistent,unused,mismatch --memory 0
+        # Удаляем системные файлы из покрытия
+        lcov --remove coverage.info '/usr/*' --output-file coverage.cleaned.info --ignore-errors unused
+        lcov --list coverage.cleaned.info
 
     - name: Upload coverage to Coveralls
       uses: coverallsapp/github-action@v2
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
-        path-to-lcov: _build/coverage.info
-
+        path-to-lcov: _build/coverage.cleaned.info
