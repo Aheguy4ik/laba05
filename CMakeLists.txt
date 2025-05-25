@@ -27,13 +27,14 @@ if(BUILD_TESTS)
 
     target_link_libraries(check PRIVATE banking gmock gmock_main gtest gtest_main pthread)
 
-    # Отключаем оптимизации и инлайн, включаем gcov с правильными флагами
-    target_compile_options(banking PRIVATE -g -O0 --coverage -fno-inline -fno-inline-functions -fno-inline-small-functions -fno-default-inline -fPIC)
+    # Флаги для корректного сбора покрытия и отключения инлайна
+    set(COVERAGE_FLAGS -g -O0 --coverage -fno-inline -fno-inline-functions -fno-inline-small-functions -fno-default-inline -fPIC)
+
+    target_compile_options(banking PRIVATE ${COVERAGE_FLAGS})
     target_link_options(banking PRIVATE --coverage --no-pie)
 
-    target_compile_options(check PRIVATE -g -O0 --coverage -fno-inline -fno-inline-functions -fno-inline-small-functions -fno-default-inline -fPIC)
+    target_compile_options(check PRIVATE ${COVERAGE_FLAGS})
     target_link_options(check PRIVATE --coverage --no-pie)
 
     add_test(NAME check COMMAND check)
 endif()
-

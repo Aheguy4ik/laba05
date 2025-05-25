@@ -2,9 +2,9 @@ name: CMake Build and Test with Coverage
 
 on:
   push:
-    branches: [master, main]
+    branches: [ master, main ]
   pull_request:
-    branches: [master, main]
+    branches: [ master, main ]
 
 jobs:
   build:
@@ -14,6 +14,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
+    - name: Clean old build and coverage files
+      run: |
+        rm -rf _build
+        find . -name '*.gcda' -o -name '*.gcno' | xargs -r rm -f
+
     - name: Init submodules
       run: git submodule update --init --recursive
 
@@ -21,9 +26,6 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y lcov
-
-    - name: Clean coverage files
-      run: rm -rf _build
 
     - name: Configure CMake
       run: cmake -S . -B _build -DBUILD_TESTS=ON
@@ -39,8 +41,9 @@ jobs:
     - name: Capture coverage info
       run: |
         cd _build
-        lcov --capture --directory . --output-file coverage.info
-        lcov --remove coverage.info '/usr/*' 'third-party/*' --output-file coverage.info --ignore-errors=unused
+        # Захватываем покрытие, игнорируем предупреждения inconsistent
+        lcov --capture --directory . --output-file coverage.info --ignore-errors inconsistent,unused
+        lcov --remove coverage.info '/usr/*' --output-file coverage.info --ignore-errors unused
         lcov --list coverage.info
 
     - name: Upload coverage to Coveralls
