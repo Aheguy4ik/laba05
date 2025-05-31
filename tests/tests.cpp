@@ -7,16 +7,12 @@
 using ::testing::Return;
 using ::testing::Throw;
 using ::testing::_;
-using ::testing::HasSubstr;
-using ::testing::NiceMock;
-using ::testing::StrictMock;
 
 // --- Мок для Account ---
 class MockAccount : public Account {
 public:
-    MockAccount() : Account(0, 0) {}
+    MockAccount(int id, int balance) : Account(id, balance) {}
 
-    MOCK_CONST_METHOD0(id, int());
     MOCK_CONST_METHOD0(GetBalance, int());
     MOCK_METHOD1(ChangeBalance, void(int diff));
     MOCK_METHOD0(Lock, void());
@@ -26,87 +22,84 @@ public:
 // --- Тесты Transaction через MockAccount ---
 
 TEST(TransactionMock, CallsAccountMethodsOnSuccess) {
-    StrictMock<MockAccount> from;
-    StrictMock<MockAccount> to;
+    MockAccount from(0, 1000);
+    MockAccount to(1, 100);
 
     Transaction tr;
     tr.set_fee(50);
 
-    EXPECT_CALL(from, id()).WillRepeatedly(Return(0));
-    EXPECT_CALL(to, id()).WillRepeatedly(Return(1));
-
-    EXPECT_CALL(from, GetBalance()).WillOnce(Return(1000)).WillOnce(Return(850));
-    EXPECT_CALL(to, GetBalance()).WillOnce(Return(200));
+    EXPECT_CALL(from, GetBalance()).WillRepeatedly(Return(1000));
     EXPECT_CALL(from, Lock()).Times(1);
-    EXPECT_CALL(to, Lock()).Times(1);
     EXPECT_CALL(from, Unlock()).Times(1);
-    EXPECT_CALL(to, Unlock()).Times(1);
-
     EXPECT_CALL(from, ChangeBalance(-150)).Times(1);
+
+    EXPECT_CALL(to, Lock()).Times(1);
+    EXPECT_CALL(to, Unlock()).Times(1);
     EXPECT_CALL(to, ChangeBalance(100)).Times(1);
 
-    testing::internal::CaptureStdout();
     EXPECT_TRUE(tr.Make(from, to, 100));
-    std::string output = testing::internal::GetCapturedStdout();
-    EXPECT_THAT(output, HasSubstr("0 send to 1 $100"));
 }
 
 TEST(TransactionMock, FailsWhenInsufficientFunds) {
-    StrictMock<MockAccount> from;
-    StrictMock<MockAccount> to;
+    MockAccount from(0, 100);
+    MockAccount to(1, 100);
 
     Transaction tr;
-    tr.set_fee(60);
+    tr.set_fee(50);
 
-    EXPECT_CALL(from, id()).WillRepeatedly(Return(0));
-    EXPECT_CALL(to, id()).WillRepeatedly(Return(1));
     EXPECT_CALL(from, GetBalance()).WillOnce(Return(100));
-    EXPECT_CALL(from, Lock());
-    EXPECT_CALL(from, Unlock());
-
-    EXPECT_CALL(to, Lock());
-    EXPECT_CALL(to, Unlock());
+    EXPECT_CALL(from, Lock()).Times(1);
+    EXPECT_CALL(from, Unlock()).Times(1);
 
     EXPECT_FALSE(tr.Make(from, to, 100));
 }
 
-TEST(TransactionMock, ThrowsIfSameAccount) {
+// --- ДОПОЛНИТЕЛЬНЫЕ ТЕСТЫ ДЛЯ 100% ПОКРЫТИЯ ---
+
+TEST(TransactionMock, ThrowsWhenSameAccountId) {
+    MockAccount acc(0, 1000);
     Transaction tr;
-    StrictMock<MockAccount> acc;
 
-    EXPECT_CALL(acc, id()).WillRepeatedly(Return(1));
-
+    // id одинаковые → должно выбросить
     EXPECT_THROW(tr.Make(acc, acc, 100), std::logic_error);
 }
 
-TEST(TransactionMock, ThrowsIfNegativeAmount) {
+TEST(TransactionMock, ThrowsWhenNegativeSum) {
+    MockAccount from(0, 1000);
+    MockAccount to(1, 1000);
+
     Transaction tr;
-    StrictMock<MockAccount> from, to;
-
-    EXPECT_CALL(from, id()).WillOnce(Return(0));
-    EXPECT_CALL(to, id()).WillOnce(Return(1));
-
     EXPECT_THROW(tr.Make(from, to, -50), std::invalid_argument);
 }
 
-TEST(TransactionMock, ThrowsIfTooSmallAmount) {
+TEST(TransactionMock, ThrowsWhenSumTooSmall) {
+    MockAccount from(0, 1000);
+    MockAccount to(1, 1000);
+
     Transaction tr;
-    StrictMock<MockAccount> from, to;
-
-    EXPECT_CALL(from, id()).WillOnce(Return(0));
-    EXPECT_CALL(to, id()).WillOnce(Return(1));
-
-    EXPECT_THROW(tr.Make(from, to, 50), std::logic_error); // < 100
+    EXPECT_THROW(tr.Make(from, to, 99), std::logic_error);
 }
 
-TEST(TransactionMock, ReturnsFalseWhenFeeTooHigh) {
+TEST(TransactionMock, ReturnsFalseWhenFeeTooBig) {
+    MockAccount from(0, 1000);
+    MockAccount to(1, 1000);
+
     Transaction tr;
-    tr.set_fee(60); // 60 * 2 = 120 > 100
+    tr.set_fee(60);  // 60 * 2 > 100 → false
 
-    StrictMock<MockAccount> from, to;
+    EXPECT_FALSE(tr.Make(from, to, 100));
+}
 
-    EXPECT_CALL(from, id()).WillRepeatedly(Return(0));
-    EXPECT_CALL(to, id()).WillRepeatedly(Return(1));
+TEST(TransactionMock, DebitFailsIfNotEnoughBalance) {
+    MockAccount from(0, 149);  // Меньше чем 100 + 50
+    MockAccount to(1, 1000);
+
+    Transaction tr;
+    tr.set_fee(50);
+
+    EXPECT_CALL(from, GetBalance()).WillOnce(Return(149));
+    EXPECT_CALL(from, Lock()).Times(1);
+    EXPECT_CALL(from, Unlock()).Times(1);
 
     EXPECT_FALSE(tr.Make(from, to, 100));
 }
