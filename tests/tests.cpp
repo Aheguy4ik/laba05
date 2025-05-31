@@ -21,6 +21,27 @@ public:
 
 // --- Тесты Transaction через MockAccount ---
 
+TEST(AccountReal, GetBalanceAndChangeBalance) {
+    Account acc(1, 500);
+    EXPECT_EQ(acc.GetBalance(), 500);
+
+    acc.Lock();
+    EXPECT_NO_THROW(acc.ChangeBalance(100));
+    EXPECT_EQ(acc.GetBalance(), 600);
+
+    EXPECT_THROW(acc.ChangeBalance(-700), std::runtime_error);
+}
+
+TEST(AccountReal, LockUnlockBehavior) {
+    Account acc(1, 1000);
+
+    acc.Lock();
+    EXPECT_THROW(acc.Lock(), std::runtime_error);  // Двойной Lock — ошибка
+    acc.Unlock();
+    EXPECT_NO_THROW(acc.Lock());  // После Unlock можно снова Lock
+}
+
+
 TEST(TransactionMock, CallsAccountMethodsOnSuccess) {
     MockAccount from(0, 1000);
     MockAccount to(1, 100);
