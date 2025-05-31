@@ -29,7 +29,7 @@ TEST(TransactionMock, CallsAccountMethodsOnSuccess) {
     tr.set_fee(50);
 
     // Подготовка вызовов
-    EXPECT_CALL(from, GetBalance()).WillOnce(Return(1000));
+    EXPECT_CALL(from, GetBalance()).WillRepeatedly(Return(1000));
     EXPECT_CALL(from, Lock()).Times(1);
     EXPECT_CALL(from, Unlock()).Times(1);
     EXPECT_CALL(from, ChangeBalance(-150)).Times(1);
