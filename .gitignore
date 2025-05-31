@@ -1,0 +1,6 @@
+build/
+_build/
+Testing/
+*.gcno
+*.gcda
+*.info
